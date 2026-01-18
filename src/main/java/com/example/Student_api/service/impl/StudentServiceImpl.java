@@ -61,18 +61,42 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public StudentResponseDto getStudentById(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		Student student = studentRepository.findById(id).orElseThrow(()-> new RuntimeException("Student not found"));
+		
+		StudentResponseDto dto=new StudentResponseDto();
+		dto.setId(student.getId());
+		dto.setName(student.getName());
+		dto.setEmail(student.getEmail());
+		dto.setAge(student.getAge());
+		return dto;
 	}
 
 	@Override
 	public StudentResponseDto updateStudent(Long id, StudentRequestDto request) {
 		// TODO Auto-generated method stub
-		return null;
+		Student student=studentRepository.findById(id).orElseThrow(()-> new RuntimeException("Student not found"));
+		student.setName(request.getName());
+		student.setEmail(request.getEmail());
+		student.setAge(request.getAge());
+		Student updatedStudent=studentRepository.save(student);
+		
+		StudentResponseDto dto = new StudentResponseDto();
+		
+		dto.setId(updatedStudent.getId());
+		dto.setName(updatedStudent.getName());
+		dto.setEmail(updatedStudent.getEmail());
+		dto.setAge(updatedStudent.getAge());
+		return dto;
 	}
 
 	@Override
 	public void deleteStudent(Long id) {
 		// TODO Auto-generated method stub
+		
+		if(!studentRepository.existsById(id)) {
+			throw new RuntimeException("Student not found");
+		}
+		studentRepository.deleteById(id);
 		
 	}
 }
